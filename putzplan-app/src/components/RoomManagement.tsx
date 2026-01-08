@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Plus, Trash2, Edit2, Home, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { Room, FloorLevel } from '../types';
-import { templateRooms } from '../data/templates';
+import { RoomTemplateSelector } from './RoomTemplateSelector';
 
 export function RoomManagement() {
   const { rooms, addRoom, updateRoom, deleteRoom } = useApp();
   const [isAdding, setIsAdding] = useState(false);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [formData, setFormData] = useState({ name: '', floor: 'ground' as FloorLevel });
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
   const floorLabels: Record<FloorLevel, string> = {
     basement: 'Keller',
@@ -53,19 +54,15 @@ export function RoomManagement() {
     first: rooms.filter((r) => r.floor === 'first'),
   };
 
-  const loadTemplateRooms = () => {
-    if (rooms.length > 0) {
-      if (!confirm('Möchten Sie die Template-Räume zu den vorhandenen Räumen hinzufügen?')) {
-        return;
-      }
-    }
-
-    templateRooms.forEach((template) => {
-      const newRoom: Room = {
-        id: Date.now().toString() + Math.random(),
-        ...template,
-      };
-      addRoom(newRoom);
+  const handleTemplateSelect = (selectedRooms: Omit<Room, 'id'>[]) => {
+    selectedRooms.forEach((template, idx) => {
+      setTimeout(() => {
+        const newRoom: Room = {
+          id: Date.now().toString() + Math.random(),
+          ...template,
+        };
+        addRoom(newRoom);
+      }, idx * 10); // Kleine Verzögerung für eindeutige IDs
     });
   };
 
@@ -75,12 +72,12 @@ export function RoomManagement() {
         <h2 className="text-2xl font-bold text-gray-900">Raumverwaltung</h2>
         <div className="flex space-x-2">
           <button
-            onClick={loadTemplateRooms}
-            className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-            title="Standard-Räume als Vorlage laden"
+            onClick={() => setShowTemplateSelector(true)}
+            className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
+            title="Räume aus Vorlagen auswählen"
           >
             <Sparkles className="w-5 h-5" />
-            <span>Vorlagen laden</span>
+            <span>Vorlagen</span>
           </button>
           <button
             onClick={() => setIsAdding(true)}
@@ -206,6 +203,13 @@ export function RoomManagement() {
           </button>
         </div>
       )}
+
+      {/* Template-Auswahl-Dialog */}
+      <RoomTemplateSelector
+        isOpen={showTemplateSelector}
+        onClose={() => setShowTemplateSelector(false)}
+        onSelect={handleTemplateSelect}
+      />
     </div>
   );
 }
