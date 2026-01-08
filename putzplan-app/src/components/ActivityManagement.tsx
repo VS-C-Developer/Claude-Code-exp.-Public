@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Plus, Trash2, Edit2, ListTodo, X, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { Activity, IntervalType, Task } from '../types';
-import { templateActivities, activityRoomMapping } from '../data/templates';
+import { ActivityTemplateSelector } from './ActivityTemplateSelector';
 
 export function ActivityManagement() {
   const { rooms, activities, addActivity, updateActivity, deleteActivity } = useApp();
   const [isAdding, setIsAdding] = useState(false);
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -107,43 +108,27 @@ export function ActivityManagement() {
     return acc;
   }, {} as Record<string, Activity[]>);
 
-  const loadTemplateActivities = () => {
-    if (rooms.length === 0) {
-      alert('Bitte legen Sie zuerst Räume an!');
-      return;
-    }
-
-    if (activities.length > 0) {
-      if (!confirm('Möchten Sie die Template-Tätigkeiten zu den vorhandenen Tätigkeiten hinzufügen?')) {
-        return;
-      }
-    }
-
-    let addedCount = 0;
-
-    templateActivities.forEach((template) => {
-      const matchingRoomNames = activityRoomMapping[template.name] || [];
-
-      matchingRoomNames.forEach((roomName) => {
-        const room = rooms.find((r) => r.name === roomName);
-        if (room) {
+  const handleTemplateSelect = (
+    selectedActivities: { template: Omit<Activity, 'id' | 'createdAt'>; rooms: any[] }[]
+  ) => {
+    selectedActivities.forEach((item, idx) => {
+      item.rooms.forEach((room) => {
+        setTimeout(() => {
+          const { tasks, ...templateWithoutTasks } = item.template;
           const newActivity: Activity = {
+            ...templateWithoutTasks,
             id: Date.now().toString() + Math.random(),
             roomId: room.id,
             createdAt: new Date().toISOString(),
-            ...template,
-            tasks: template.tasks.map((task, idx) => ({
+            tasks: tasks.map((task, taskIdx) => ({
               ...task,
-              id: Date.now().toString() + Math.random() + idx,
+              id: Date.now().toString() + Math.random() + taskIdx,
             })),
           };
           addActivity(newActivity);
-          addedCount++;
-        }
+        }, idx * 10);
       });
     });
-
-    alert(`${addedCount} Tätigkeiten wurden hinzugefügt!`);
   };
 
   return (
@@ -152,13 +137,13 @@ export function ActivityManagement() {
         <h2 className="text-2xl font-bold text-gray-900">Tätigkeitsverwaltung</h2>
         <div className="flex space-x-2">
           <button
-            onClick={loadTemplateActivities}
-            className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+            onClick={() => setShowTemplateSelector(true)}
+            className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
             disabled={rooms.length === 0}
-            title="Standard-Tätigkeiten als Vorlage laden"
+            title="Tätigkeiten aus Vorlagen auswählen"
           >
             <Sparkles className="w-5 h-5" />
-            <span>Vorlagen laden</span>
+            <span>Vorlagen</span>
           </button>
           <button
             onClick={() => setIsAdding(true)}
@@ -406,6 +391,14 @@ export function ActivityManagement() {
           );
         })}
       </div>
+
+      {/* Template-Auswahl-Dialog */}
+      <ActivityTemplateSelector
+        isOpen={showTemplateSelector}
+        onClose={() => setShowTemplateSelector(false)}
+        onSelect={handleTemplateSelect}
+        availableRooms={rooms}
+      />
     </div>
   );
 }
