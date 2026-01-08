@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, ListTodo, X } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Edit2, ListTodo, X, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { Activity, IntervalType, Task } from '../types';
+import { templateActivities, activityRoomMapping } from '../data/templates';
 
 export function ActivityManagement() {
   const { rooms, activities, addActivity, updateActivity, deleteActivity } = useApp();
@@ -106,18 +107,68 @@ export function ActivityManagement() {
     return acc;
   }, {} as Record<string, Activity[]>);
 
+  const loadTemplateActivities = () => {
+    if (rooms.length === 0) {
+      alert('Bitte legen Sie zuerst Räume an!');
+      return;
+    }
+
+    if (activities.length > 0) {
+      if (!confirm('Möchten Sie die Template-Tätigkeiten zu den vorhandenen Tätigkeiten hinzufügen?')) {
+        return;
+      }
+    }
+
+    let addedCount = 0;
+
+    templateActivities.forEach((template) => {
+      const matchingRoomNames = activityRoomMapping[template.name] || [];
+
+      matchingRoomNames.forEach((roomName) => {
+        const room = rooms.find((r) => r.name === roomName);
+        if (room) {
+          const newActivity: Activity = {
+            id: Date.now().toString() + Math.random(),
+            roomId: room.id,
+            createdAt: new Date().toISOString(),
+            ...template,
+            tasks: template.tasks.map((task, idx) => ({
+              ...task,
+              id: Date.now().toString() + Math.random() + idx,
+            })),
+          };
+          addActivity(newActivity);
+          addedCount++;
+        }
+      });
+    });
+
+    alert(`${addedCount} Tätigkeiten wurden hinzugefügt!`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Tätigkeitsverwaltung</h2>
-        <button
-          onClick={() => setIsAdding(true)}
-          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          disabled={rooms.length === 0}
-        >
-          <Plus className="w-5 h-5" />
-          <span>Tätigkeit hinzufügen</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={loadTemplateActivities}
+            className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+            disabled={rooms.length === 0}
+            title="Standard-Tätigkeiten als Vorlage laden"
+          >
+            <Sparkles className="w-5 h-5" />
+            <span>Vorlagen laden</span>
+          </button>
+          <button
+            onClick={() => setIsAdding(true)}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={rooms.length === 0}
+          >
+            <Plus className="w-5 h-5" />
+            <span>Tätigkeit hinzufügen</span>
+          </button>
+        </div>
       </div>
 
       {rooms.length === 0 && (

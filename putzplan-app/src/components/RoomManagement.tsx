@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, Home } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Edit2, Home, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { Room, FloorLevel } from '../types';
+import { templateRooms } from '../data/templates';
 
 export function RoomManagement() {
   const { rooms, addRoom, updateRoom, deleteRoom } = useApp();
@@ -10,9 +11,9 @@ export function RoomManagement() {
   const [formData, setFormData] = useState({ name: '', floor: 'ground' as FloorLevel });
 
   const floorLabels: Record<FloorLevel, string> = {
+    basement: 'Keller',
     ground: 'Erdgeschoss',
     first: '1. Etage',
-    second: '2. Etage',
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,22 +48,48 @@ export function RoomManagement() {
   };
 
   const groupedRooms = {
+    basement: rooms.filter((r) => r.floor === 'basement'),
     ground: rooms.filter((r) => r.floor === 'ground'),
     first: rooms.filter((r) => r.floor === 'first'),
-    second: rooms.filter((r) => r.floor === 'second'),
+  };
+
+  const loadTemplateRooms = () => {
+    if (rooms.length > 0) {
+      if (!confirm('Möchten Sie die Template-Räume zu den vorhandenen Räumen hinzufügen?')) {
+        return;
+      }
+    }
+
+    templateRooms.forEach((template) => {
+      const newRoom: Room = {
+        id: Date.now().toString() + Math.random(),
+        ...template,
+      };
+      addRoom(newRoom);
+    });
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Raumverwaltung</h2>
-        <button
-          onClick={() => setIsAdding(true)}
-          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Raum hinzufügen</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={loadTemplateRooms}
+            className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+            title="Standard-Räume als Vorlage laden"
+          >
+            <Sparkles className="w-5 h-5" />
+            <span>Vorlagen laden</span>
+          </button>
+          <button
+            onClick={() => setIsAdding(true)}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Raum hinzufügen</span>
+          </button>
+        </div>
       </div>
 
       {/* Formular */}
@@ -94,9 +121,9 @@ export function RoomManagement() {
                 onChange={(e) => setFormData({ ...formData, floor: e.target.value as FloorLevel })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
+                <option value="basement">Keller</option>
                 <option value="ground">Erdgeschoss</option>
                 <option value="first">1. Etage</option>
-                <option value="second">2. Etage</option>
               </select>
             </div>
             <div className="flex space-x-2">
@@ -120,7 +147,7 @@ export function RoomManagement() {
 
       {/* Räume nach Etagen gruppiert */}
       <div className="space-y-6">
-        {(['ground', 'first', 'second'] as FloorLevel[]).map((floor) => (
+        {(['basement', 'ground', 'first'] as FloorLevel[]).map((floor) => (
           <div key={floor}>
             <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
               <Home className="w-5 h-5 mr-2 text-blue-600" />

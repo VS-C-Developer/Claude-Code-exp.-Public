@@ -2,7 +2,7 @@
 export type IntervalType = 'weekly' | 'biweekly' | 'monthly' | 'custom';
 
 // Ebenen im Haus
-export type FloorLevel = 'ground' | 'first' | 'second';
+export type FloorLevel = 'basement' | 'ground' | 'first';
 
 // Raum-Typ
 export interface Room {
