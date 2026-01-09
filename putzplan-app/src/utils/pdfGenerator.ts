@@ -1,16 +1,42 @@
 import jsPDF from 'jspdf';
 import type { WeeklyPlan } from '../types';
 
-export function generatePDF(plan: WeeklyPlan) {
+type Language = 'de' | 'ru';
+
+const translations = {
+  de: {
+    title: 'Putzplan',
+    week: 'Kalenderwoche',
+    tasks: 'Zu erledigende Tätigkeiten:',
+    room: 'Raum:',
+    taskList: 'Aufgaben:',
+    createdOn: 'Erstellt am',
+    page: 'Seite',
+    of: 'von',
+  },
+  ru: {
+    title: 'План уборки',
+    week: 'Неделя',
+    tasks: 'Задачи для выполнения:',
+    room: 'Помещение:',
+    taskList: 'Задания:',
+    createdOn: 'Создано',
+    page: 'Страница',
+    of: 'из',
+  },
+};
+
+export function generatePDF(plan: WeeklyPlan, language: Language = 'de') {
+  const t = translations[language];
   const doc = new jsPDF();
 
   // Titel
   doc.setFontSize(20);
-  doc.text('Putzplan', 105, 20, { align: 'center' });
+  doc.text(t.title, 105, 20, { align: 'center' });
 
   // Wocheninformation
   doc.setFontSize(12);
-  doc.text(`Kalenderwoche ${plan.weekNumber.split('-W')[1]}`, 105, 30, { align: 'center' });
+  doc.text(`${t.week} ${plan.weekNumber.split('-W')[1]}`, 105, 30, { align: 'center' });
   doc.text(`${plan.startDate} - ${plan.endDate}`, 105, 37, { align: 'center' });
 
   // Linie
@@ -22,7 +48,7 @@ export function generatePDF(plan: WeeklyPlan) {
   // Tätigkeiten
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text('Zu erledigende Tätigkeiten:', 20, yPosition);
+  doc.text(t.tasks, 20, yPosition);
   yPosition += 10;
 
   plan.activities.forEach((item, index) => {
@@ -47,7 +73,7 @@ export function generatePDF(plan: WeeklyPlan) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text(`Raum: ${room.name}`, 30, yPosition + 6);
+    doc.text(`${t.room} ${room.name}`, 30, yPosition + 6);
     doc.setTextColor(0, 0, 0);
 
     yPosition += 12;
@@ -66,7 +92,7 @@ export function generatePDF(plan: WeeklyPlan) {
     if (activity.tasks.length > 0) {
       doc.setFontSize(9);
       doc.setFont('helvetica', 'italic');
-      doc.text('Aufgaben:', 30, yPosition);
+      doc.text(`${t.taskList}`, 30, yPosition);
       yPosition += 5;
 
       activity.tasks.forEach((task) => {
@@ -84,12 +110,13 @@ export function generatePDF(plan: WeeklyPlan) {
 
   // Footer mit Datum
   const pageCount = doc.getNumberOfPages();
+  const locale = language === 'ru' ? 'ru-RU' : 'de-DE';
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text(
-      `Erstellt am ${new Date().toLocaleDateString('de-DE')} - Seite ${i} von ${pageCount}`,
+      `${t.createdOn} ${new Date().toLocaleDateString(locale)} - ${t.page} ${i} ${t.of} ${pageCount}`,
       105,
       290,
       { align: 'center' }

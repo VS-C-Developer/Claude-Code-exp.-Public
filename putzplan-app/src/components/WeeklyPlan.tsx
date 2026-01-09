@@ -9,6 +9,7 @@ export function WeeklyPlan() {
   const { activities, rooms, completionRecords, addCompletionRecord } = useApp();
   const [selectedWeek, setSelectedWeek] = useState(getCurrentWeek());
   const [selectedActivities, setSelectedActivities] = useState<Set<string>>(new Set());
+  const [pdfLanguage, setPdfLanguage] = useState<'de' | 'ru'>('de');
 
   const weekDates = getWeekDates(selectedWeek);
 
@@ -79,7 +80,7 @@ export function WeeklyPlan() {
       startDate: formatDate(weekDates.start),
       endDate: formatDate(weekDates.end),
       activities: selectedActivityList,
-    });
+    }, pdfLanguage);
   };
 
   const changeWeek = (offset: number) => {
@@ -103,14 +104,24 @@ export function WeeklyPlan() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Wochenplan</h2>
-        <button
-          onClick={handleGeneratePDF}
-          disabled={selectedActivities.size === 0}
-          className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          <Download className="w-5 h-5" />
-          <span>PDF erstellen</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <select
+            value={pdfLanguage}
+            onChange={(e) => setPdfLanguage(e.target.value as 'de' | 'ru')}
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+          >
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="ru">🇷🇺 Русский</option>
+          </select>
+          <button
+            onClick={handleGeneratePDF}
+            disabled={selectedActivities.size === 0}
+            className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            <Download className="w-5 h-5" />
+            <span>PDF erstellen</span>
+          </button>
+        </div>
       </div>
 
       {/* Wochenauswahl */}
