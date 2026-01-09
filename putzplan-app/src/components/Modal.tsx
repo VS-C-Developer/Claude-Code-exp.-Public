@@ -13,34 +13,34 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden animate-modal-appear">
+      <div className="relative glass-card rounded-win11-xl shadow-win11-lg max-w-3xl w-full max-h-[90vh] overflow-hidden animate-modal-appear border border-white/20">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 flex items-center justify-between">
-          <h3 className="text-xl font-bold">{title}</h3>
+        <div className="px-6 py-5 flex items-center justify-between border-b border-win11-gray-200/50">
+          <h3 className="text-xl font-semibold text-win11-gray-900 tracking-tight">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+            className="w-8 h-8 flex items-center justify-center hover:bg-win11-gray-100 rounded-win11 transition-all duration-200 text-win11-gray-600 hover:text-win11-gray-900"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-160px)]">
           {children}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+          <div className="border-t border-win11-gray-200/50 px-6 py-4 glass-win11">
             {footer}
           </div>
         )}

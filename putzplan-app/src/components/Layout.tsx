@@ -16,38 +16,40 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-win11-gray-50 via-white to-win11-blue-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center space-x-3">
-            <div className="text-4xl">🧹</div>
+      <header className="glass-win11 border-b border-white/20 shadow-win11-sm sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-win11-blue-500 to-win11-blue-600 rounded-win11-lg flex items-center justify-center text-2xl shadow-win11-sm">
+              🧹
+            </div>
             <div>
-              <h1 className="text-3xl font-bold">Putzplan Manager</h1>
-              <p className="text-blue-100 mt-1">Organisieren Sie Ihre Reinigungsaufgaben effizient</p>
+              <h1 className="text-2xl font-semibold text-win11-gray-900 tracking-tight">Putzplan Manager</h1>
+              <p className="text-sm text-win11-gray-500 mt-0.5">Organisieren Sie Ihre Reinigungsaufgaben effizient</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4">
-          <div className="flex space-x-1">
+      <nav className="glass-win11-dark border-b border-white/20 sticky top-[88px] z-40 shadow-win11-sm">
+        <div className="container mx-auto px-6">
+          <div className="flex space-x-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
                 <button
                   key={item.id}
                   onClick={() => onViewChange(item.id)}
-                  className={`flex items-center space-x-2 px-6 py-4 font-medium transition-all duration-200 ${
+                  className={`flex items-center space-x-2 px-5 py-3.5 font-medium rounded-win11 transition-all duration-200 ${
                     currentView === item.id
-                      ? 'text-blue-600 border-b-3 border-blue-600 bg-blue-50'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/50'
+                      ? 'bg-white text-win11-blue-600 shadow-win11-sm'
+                      : 'text-win11-gray-700 hover:bg-white/50 hover:text-win11-gray-900'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="hidden sm:inline">{item.label}</span>
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline text-sm">{item.label}</span>
                 </button>
               );
             })}
@@ -56,14 +58,14 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
       </nav>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 pb-24">
+      <main className="container mx-auto px-6 py-8 pb-24 animate-fade-in">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/50 backdrop-blur-sm border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-4 py-6 text-center text-gray-600">
-          <p className="text-sm">Putzplan Manager - Behalten Sie den Überblick über Ihre Reinigungsarbeiten</p>
+      <footer className="glass-win11 border-t border-white/20 mt-16">
+        <div className="container mx-auto px-6 py-5 text-center">
+          <p className="text-xs text-win11-gray-500">Putzplan Manager - Behalten Sie den Überblick über Ihre Reinigungsarbeiten</p>
         </div>
       </footer>
     </div>

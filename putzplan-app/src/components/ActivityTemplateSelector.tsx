@@ -95,20 +95,20 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
       title="Tätigkeiten aus Vorlagen auswählen"
       footer={
         <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-win11-gray-600 font-medium">
             {totalSelected} Tätigkeit(en) zu Räumen ausgewählt
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-5 py-2.5 border border-win11-gray-300 rounded-win11 hover:bg-win11-gray-50 transition-all font-medium text-win11-gray-700"
             >
               Abbrechen
             </button>
             <button
               onClick={handleAdd}
               disabled={totalSelected === 0}
-              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="px-6 py-2.5 bg-win11-blue-600 text-white rounded-win11 hover:bg-win11-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-win11-sm hover:shadow-win11 font-medium"
             >
               Hinzufügen
             </button>
@@ -116,23 +116,23 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
         </div>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         {availableRooms.length === 0 && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-win11-lg p-4 text-yellow-800">
             ⚠️ Bitte legen Sie zuerst Räume an, bevor Sie Tätigkeiten hinzufügen.
           </div>
         )}
 
         {/* Filter */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-win11-gray-700 mb-2">
               Kategorie
             </label>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-win11-gray-300 rounded-win11 focus:ring-2 focus:ring-win11-blue-500 focus:border-win11-blue-500 transition-all outline-none"
             >
               <option value="all">Alle Kategorien</option>
               {categories.map(cat => (
@@ -143,7 +143,7 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
         </div>
 
         {/* Tätigkeiten-Liste */}
-        <div className="space-y-3 max-h-[500px] overflow-y-auto">
+        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
           {filteredActivities.map((activity) => {
             const originalIndex = templateActivities.findIndex(a => a === activity);
             const suggestedRooms = getSuggestedRooms(activity.name);
@@ -154,28 +154,28 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
             return (
               <div
                 key={originalIndex}
-                className={`border-2 rounded-xl overflow-hidden transition-all duration-200 ${
+                className={`border-2 rounded-win11-lg overflow-hidden transition-all duration-200 ${
                   selectedRooms.size > 0
-                    ? 'border-blue-500 bg-blue-50 shadow-md'
-                    : 'border-gray-200 hover:border-gray-300 hover:shadow'
+                    ? 'border-win11-blue-500 bg-win11-blue-50 shadow-win11'
+                    : 'border-win11-gray-200 hover:border-win11-gray-300 hover:shadow-win11-sm'
                 }`}
               >
                 {/* Header */}
-                <div className="p-4 bg-white">
+                <div className="p-4 glass-card">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
-                        <h4 className="font-semibold text-gray-900">{activity.name}</h4>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          activity.category === 'Wöchentlich' ? 'bg-green-100 text-green-700' :
-                          activity.category === 'Monatlich' ? 'bg-blue-100 text-blue-700' :
-                          'bg-purple-100 text-purple-700'
+                        <h4 className="font-semibold text-win11-gray-900">{activity.name}</h4>
+                        <span className={`text-xs px-2.5 py-1 rounded-win11 font-medium ${
+                          activity.category === 'Wöchentlich' ? 'bg-green-50 text-green-700' :
+                          activity.category === 'Monatlich' ? 'bg-blue-50 text-blue-700' :
+                          'bg-purple-50 text-purple-700'
                         }`}>
                           {activity.category}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-                      <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                      <p className="text-sm text-win11-gray-600 mt-2">{activity.description}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-xs text-win11-gray-500">
                         <span>
                           {activity.intervalType === 'custom'
                             ? `Alle ${activity.intervalWeeks} Wochen`
@@ -188,31 +188,31 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
                     </div>
                     <button
                       onClick={() => setExpandedActivity(isExpanded ? null : originalIndex)}
-                      className="ml-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="ml-4 w-8 h-8 flex items-center justify-center hover:bg-win11-gray-100 rounded-win11 transition-all"
                     >
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-600" />
+                        <ChevronUp className="w-5 h-5 text-win11-gray-600" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-600" />
+                        <ChevronDown className="w-5 h-5 text-win11-gray-600" />
                       )}
                     </button>
                   </div>
 
                   {/* Schnellauswahl */}
                   {suggestedRooms.length > 0 && (
-                    <div className="mt-3 flex items-center space-x-2">
+                    <div className="mt-4 flex items-center space-x-3">
                       <button
                         onClick={() => toggleAllRoomsForActivity(originalIndex, suggestedRooms.map(r => r.id))}
-                        className={`text-sm px-3 py-1 rounded transition-colors ${
+                        className={`text-sm px-4 py-2 rounded-win11 transition-all font-medium ${
                           allSelected
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
-                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                            ? 'bg-win11-blue-600 text-white hover:bg-win11-blue-700 shadow-win11-sm'
+                            : 'bg-win11-blue-50 text-win11-blue-700 hover:bg-win11-blue-100'
                         }`}
                       >
                         {allSelected ? '✓ ' : ''}Alle vorgeschlagenen Räume ({suggestedRooms.length})
                       </button>
                       {selectedRooms.size > 0 && (
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-win11-gray-600 font-medium">
                           {selectedRooms.size} ausgewählt
                         </span>
                       )}
@@ -222,15 +222,15 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
 
                 {/* Erweiterte Details */}
                 {isExpanded && (
-                  <div className="border-t border-gray-200 bg-gray-50 p-4 space-y-4">
+                  <div className="border-t border-win11-gray-200/50 glass-win11 p-4 space-y-4">
                     {/* Aufgaben */}
                     {activity.tasks.length > 0 && (
                       <div>
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Aufgaben:</h5>
-                        <ul className="space-y-1">
+                        <h5 className="text-sm font-semibold text-win11-gray-900 mb-3">Aufgaben:</h5>
+                        <ul className="space-y-2">
                           {activity.tasks.map((task) => (
-                            <li key={task.id} className="text-sm text-gray-600 flex items-start">
-                              <span className="mr-2">•</span>
+                            <li key={task.id} className="text-sm text-win11-gray-700 flex items-start">
+                              <span className="mr-2 text-win11-blue-600">•</span>
                               <span>{task.description}</span>
                             </li>
                           ))}
@@ -240,7 +240,7 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
 
                     {/* Raum-Auswahl */}
                     <div>
-                      <h5 className="text-sm font-medium text-gray-700 mb-2">
+                      <h5 className="text-sm font-semibold text-win11-gray-900 mb-3">
                         Für diese Räume hinzufügen:
                       </h5>
                       {suggestedRooms.length > 0 ? (
@@ -251,10 +251,10 @@ export function ActivityTemplateSelector({ isOpen, onClose, onSelect, availableR
                               <button
                                 key={room.id}
                                 onClick={() => toggleActivity(originalIndex, room.id)}
-                                className={`text-left p-2 rounded-lg border transition-all ${
+                                className={`text-left p-3 rounded-win11 border transition-all ${
                                   isSelected
-                                    ? 'border-blue-500 bg-blue-100 text-blue-900'
-                                    : 'border-gray-300 bg-white hover:border-blue-300'
+                                    ? 'border-win11-blue-500 bg-win11-blue-100 text-win11-blue-900 shadow-win11-sm'
+                                    : 'border-win11-gray-300 bg-white hover:border-win11-blue-300'
                                 }`}
                               >
                                 <div className="flex items-center space-x-2">
