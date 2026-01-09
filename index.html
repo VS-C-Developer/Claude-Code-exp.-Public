@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Apps Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #2C3E50;
+            text-align: center;
+        }
+
+        .app-description {
+            color: #7F8C8D;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .app-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-features li {
+            padding: 0.5rem 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-features li:before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .launch-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .launch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            opacity: 0.8;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.2rem;
+            color: white;
+        }
+
+        .badges {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .github-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #2C3E50;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .github-link {
+                position: static;
+                margin: 0 auto 2rem;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="https://github.com/VS-C-Developer/Claude-Code-exp.-Public" class="github-link" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+        </a>
+
+        <header>
+            <h1>🚀 Web Apps Collection</h1>
+            <p class="subtitle">Nützliche Web-Anwendungen für den Alltag</p>
+        </header>
+
+        <div class="apps-grid">
+            <!-- Baby Sleep Tracker App -->
+            <div class="app-card">
+                <div class="app-icon">👶</div>
+                <h2 class="app-title">Baby Schlaf Tracker</h2>
+                <p class="app-description">
+                    Umfassende App zum Tracken von Babyschlaf, Fütterungen, Windeln und mehr - inspiriert von der Napper App.
+                </p>
+                <ul class="app-features">
+                    <li>Schlaf & Wachzeiten tracken</li>
+                    <li>Fütterung & Windeln dokumentieren</li>
+                    <li>8 White Noise Geräusche</li>
+                    <li>Altersbasierte Empfehlungen</li>
+                    <li>Intelligente Schlafplanung</li>
+                </ul>
+                <div class="badges">
+                    <span class="badge">Vanilla JS</span>
+                    <span class="badge">Web Audio API</span>
+                    <span class="badge">Offline-fähig</span>
+                </div>
+                <a href="baby-sleep-tracker/" class="launch-btn">App öffnen →</a>
+            </div>
+
+            <!-- Putzplan App -->
+            <div class="app-card">
+                <div class="app-icon">🧹</div>
+                <h2 class="app-title">Putzplan Manager</h2>
+                <p class="app-description">
+                    Organisieren Sie Ihren Haushalt mit diesem intelligenten Putzplan-Manager. Perfekt für WGs und Familien.
+                </p>
+                <ul class="app-features">
+                    <li>Aufgaben & Räume verwalten</li>
+                    <li>Zeitplan erstellen</li>
+                    <li>Fortschritt tracken</li>
+                    <li>Mehrere Personen</li>
+                    <li>Responsive Design</li>
+                </ul>
+                <div class="badges">
+                    <span class="badge">React</span>
+                    <span class="badge">Modern UI</span>
+                    <span class="badge">Mobile-First</span>
+                </div>
+                <a href="putzplan-app/" class="launch-btn">App öffnen →</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Entwickelt mit ❤️ | Alle Apps funktionieren offline | Open Source</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Keine Daten werden an Server gesendet - alles bleibt lokal auf Ihrem Gerät</p>
+        </footer>
+    </div>
+</body>
+</html>
