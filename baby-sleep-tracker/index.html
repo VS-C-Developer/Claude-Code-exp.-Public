@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Schlaf Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>👶 Baby Schlaf Tracker</h1>
+            <div class="baby-selector">
+                <select id="babySelect">
+                    <option value="">Baby wählen...</option>
+                </select>
+                <button id="addBabyBtn" class="icon-btn">➕</button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-page="dashboard">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-btn" data-page="tracking">
+                <span class="icon">⏱️</span>
+                <span>Tracking</span>
+            </button>
+            <button class="nav-btn" data-page="sounds">
+                <span class="icon">🎵</span>
+                <span>Geräusche</span>
+            </button>
+            <button class="nav-btn" data-page="schedule">
+                <span class="icon">📅</span>
+                <span>Schlafplan</span>
+            </button>
+        </nav>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="dashboard-container">
+                <h2>Heutiger Überblick</h2>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">😴</div>
+                        <div class="stat-info">
+                            <h3>Gesamtschlaf</h3>
+                            <p id="totalSleepToday">0h 0m</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👁️</div>
+                        <div class="stat-info">
+                            <h3>Wachzeit</h3>
+                            <p id="currentWakeTime">0h 0m</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🍼</div>
+                        <div class="stat-info">
+                            <h3>Fütterungen</h3>
+                            <p id="feedingsToday">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🧷</div>
+                        <div class="stat-info">
+                            <h3>Windeln</h3>
+                            <p id="diapersToday">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Sleep Recommendation -->
+                <div class="recommendation-card">
+                    <h3>💡 Nächster Schlaf empfohlen</h3>
+                    <p class="recommendation-time" id="nextSleepTime">Berechne...</p>
+                    <p class="recommendation-reason" id="recommendationReason">Basierend auf Wachzeit und Alter</p>
+                </div>
+
+                <!-- Recent Activities Timeline -->
+                <div class="timeline-section">
+                    <h3>Heutige Aktivitäten</h3>
+                    <div id="todayTimeline" class="timeline">
+                        <!-- Timeline items will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tracking Page -->
+        <div id="tracking" class="page">
+            <div class="tracking-container">
+                <h2>Aktivitäten tracken</h2>
+
+                <!-- Sleep Tracking -->
+                <div class="tracking-section">
+                    <h3>😴 Schlaf</h3>
+                    <div class="tracking-controls">
+                        <button id="sleepBtn" class="action-btn primary">
+                            <span class="btn-icon">🛏️</span>
+                            <span class="btn-text">Schlaf starten</span>
+                        </button>
+                        <div id="sleepTimer" class="timer-display" style="display: none;">
+                            <span id="sleepDuration">00:00:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feeding Tracking -->
+                <div class="tracking-section">
+                    <h3>🍼 Fütterung</h3>
+                    <div class="tracking-controls">
+                        <div class="button-group">
+                            <button class="action-btn" id="breastfeedingBtn">
+                                <span class="btn-icon">🤱</span>
+                                <span class="btn-text">Stillen</span>
+                            </button>
+                            <button class="action-btn" id="bottleBtn">
+                                <span class="btn-icon">🍼</span>
+                                <span class="btn-text">Flasche</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diaper Tracking -->
+                <div class="tracking-section">
+                    <h3>🧷 Windel</h3>
+                    <div class="tracking-controls">
+                        <div class="button-group">
+                            <button class="action-btn" data-diaper-type="wet">
+                                <span class="btn-icon">💧</span>
+                                <span class="btn-text">Nass</span>
+                            </button>
+                            <button class="action-btn" data-diaper-type="dirty">
+                                <span class="btn-icon">💩</span>
+                                <span class="btn-text">Stuhlgang</span>
+                            </button>
+                            <button class="action-btn" data-diaper-type="both">
+                                <span class="btn-icon">🧷</span>
+                                <span class="btn-text">Beides</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="tracking-section">
+                    <h3>📝 Notizen hinzufügen</h3>
+                    <div class="note-input-container">
+                        <textarea id="noteInput" placeholder="Besondere Beobachtungen, Stimmung, etc."></textarea>
+                        <button id="addNoteBtn" class="action-btn">Notiz speichern</button>
+                    </div>
+                </div>
+
+                <!-- Quick Add Past Activity -->
+                <div class="tracking-section">
+                    <h3>⏮️ Vergangene Aktivität hinzufügen</h3>
+                    <div class="past-activity-form">
+                        <select id="pastActivityType">
+                            <option value="sleep">Schlaf</option>
+                            <option value="feeding">Fütterung</option>
+                            <option value="diaper">Windel</option>
+                        </select>
+                        <input type="datetime-local" id="pastActivityTime">
+                        <button id="addPastActivityBtn" class="action-btn">Hinzufügen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sounds Page -->
+        <div id="sounds" class="page">
+            <div class="sounds-container">
+                <h2>🎵 Schlafgeräusche & Musik</h2>
+
+                <div class="sound-player">
+                    <div class="now-playing" id="nowPlaying">
+                        <p class="playing-text">Kein Sound spielt gerade</p>
+                    </div>
+
+                    <div class="volume-control">
+                        <label for="volumeSlider">🔊 Lautstärke</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+                        <span id="volumeValue">50%</span>
+                    </div>
+
+                    <div class="timer-control">
+                        <label for="soundTimer">⏰ Timer (Minuten)</label>
+                        <select id="soundTimer">
+                            <option value="0">Kein Timer</option>
+                            <option value="5">5 Minuten</option>
+                            <option value="10">10 Minuten</option>
+                            <option value="15">15 Minuten</option>
+                            <option value="30">30 Minuten</option>
+                            <option value="60">60 Minuten</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sound-grid">
+                    <div class="sound-card" data-sound="white-noise">
+                        <div class="sound-icon">⚪</div>
+                        <h3>Weißes Rauschen</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="pink-noise">
+                        <div class="sound-icon">🌸</div>
+                        <h3>Rosa Rauschen</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="brown-noise">
+                        <div class="sound-icon">🟤</div>
+                        <h3>Braunes Rauschen</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="rain">
+                        <div class="sound-icon">🌧️</div>
+                        <h3>Regen</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="ocean">
+                        <div class="sound-icon">🌊</div>
+                        <h3>Ozean Wellen</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="heartbeat">
+                        <div class="sound-icon">❤️</div>
+                        <h3>Herzschlag</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="lullaby">
+                        <div class="sound-icon">🎼</div>
+                        <h3>Wiegenlied</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                    <div class="sound-card" data-sound="fan">
+                        <div class="sound-icon">🌀</div>
+                        <h3>Ventilator</h3>
+                        <button class="play-sound-btn">▶️ Abspielen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Page -->
+        <div id="schedule" class="page">
+            <div class="schedule-container">
+                <h2>📅 Empfohlener Schlafplan</h2>
+
+                <div class="baby-info-card">
+                    <h3>Baby Information</h3>
+                    <div class="info-field">
+                        <label for="babyAge">Alter (Monate):</label>
+                        <input type="number" id="babyAge" min="0" max="24" value="6">
+                    </div>
+                    <button id="updateScheduleBtn" class="action-btn">Plan aktualisieren</button>
+                </div>
+
+                <div class="schedule-recommendations">
+                    <h3>Basierend auf dem Alter Ihres Babys</h3>
+                    <div id="scheduleContent">
+                        <!-- Schedule recommendations will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="sleep-tips">
+                    <h3>💡 Schlaf-Tipps</h3>
+                    <ul id="sleepTipsList">
+                        <!-- Tips will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+
+        <!-- Add Baby Modal -->
+        <div id="addBabyModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Neues Baby hinzufügen</h2>
+                <form id="addBabyForm">
+                    <div class="form-group">
+                        <label for="babyName">Name:</label>
+                        <input type="text" id="babyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="babyBirthdate">Geburtsdatum:</label>
+                        <input type="date" id="babyBirthdate" required>
+                    </div>
+                    <button type="submit" class="action-btn primary">Speichern</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Feeding Detail Modal -->
+        <div id="feedingModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="feedingModalTitle">Fütterung tracken</h2>
+                <form id="feedingForm">
+                    <div class="form-group" id="breastfeedingFields" style="display: none;">
+                        <label>Seite:</label>
+                        <div class="button-group">
+                            <button type="button" class="toggle-btn" data-side="left">Links</button>
+                            <button type="button" class="toggle-btn" data-side="right">Rechts</button>
+                            <button type="button" class="toggle-btn" data-side="both">Beide</button>
+                        </div>
+                        <input type="hidden" id="breastSide" value="left">
+                    </div>
+                    <div class="form-group" id="bottleFields" style="display: none;">
+                        <label for="bottleAmount">Menge (ml):</label>
+                        <input type="number" id="bottleAmount" min="0" step="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedingDuration">Dauer (Minuten):</label>
+                        <input type="number" id="feedingDuration" min="1" value="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedingNotes">Notizen:</label>
+                        <textarea id="feedingNotes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="action-btn primary">Speichern</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
