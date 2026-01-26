@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, ListTodo, X } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Edit2, ListTodo, X, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { Activity, IntervalType, Task } from '../types';
+import { ActivityTemplateSelector } from './ActivityTemplateSelector';
 
 export function ActivityManagement() {
   const { rooms, activities, addActivity, updateActivity, deleteActivity } = useApp();
   const [isAdding, setIsAdding] = useState(false);
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -106,18 +108,52 @@ export function ActivityManagement() {
     return acc;
   }, {} as Record<string, Activity[]>);
 
+  const handleTemplateSelect = (
+    selectedActivities: { template: Omit<Activity, 'id' | 'createdAt'>; rooms: any[] }[]
+  ) => {
+    selectedActivities.forEach((item, idx) => {
+      item.rooms.forEach((room) => {
+        setTimeout(() => {
+          const { tasks, ...templateWithoutTasks } = item.template;
+          const newActivity: Activity = {
+            ...templateWithoutTasks,
+            id: Date.now().toString() + Math.random(),
+            roomId: room.id,
+            createdAt: new Date().toISOString(),
+            tasks: tasks.map((task, taskIdx) => ({
+              ...task,
+              id: Date.now().toString() + Math.random() + taskIdx,
+            })),
+          };
+          addActivity(newActivity);
+        }, idx * 10);
+      });
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Tätigkeitsverwaltung</h2>
-        <button
-          onClick={() => setIsAdding(true)}
-          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          disabled={rooms.length === 0}
-        >
-          <Plus className="w-5 h-5" />
-          <span>Tätigkeit hinzufügen</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setShowTemplateSelector(true)}
+            className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
+            disabled={rooms.length === 0}
+            title="Tätigkeiten aus Vorlagen auswählen"
+          >
+            <Sparkles className="w-5 h-5" />
+            <span>Vorlagen</span>
+          </button>
+          <button
+            onClick={() => setIsAdding(true)}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={rooms.length === 0}
+          >
+            <Plus className="w-5 h-5" />
+            <span>Tätigkeit hinzufügen</span>
+          </button>
+        </div>
       </div>
 
       {rooms.length === 0 && (
@@ -355,6 +391,14 @@ export function ActivityManagement() {
           );
         })}
       </div>
+
+      {/* Template-Auswahl-Dialog */}
+      <ActivityTemplateSelector
+        isOpen={showTemplateSelector}
+        onClose={() => setShowTemplateSelector(false)}
+        onSelect={handleTemplateSelect}
+        availableRooms={rooms}
+      />
     </div>
   );
 }
